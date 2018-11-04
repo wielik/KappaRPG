@@ -1,7 +1,17 @@
 package com.wielik.kappa;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import com.wielik.kappa.gfx.Image;
 import com.wielik.kappa.gfx.Renderer;
+import com.wielik.kappa.gfx.Sprite;
+import com.wielik.kappa.gfx.SpriteSheet;
 import com.wielik.kappa.gfx.Window;
+import com.wielik.kappa.input.Keyboard;
+import com.wielik.kappa.input.Mouse;
+import com.wielik.kappa.map.Map;
+import com.wielik.kappa.map.Tiles;
 
 public class GameContainer implements Runnable {
 
@@ -11,7 +21,7 @@ public class GameContainer implements Runnable {
 	private final float SCALE = 2f;
 	
 	private final double UPDATE_RATE = 60.0; //per second
-	private boolean UNLOCKED_FPS = false;
+	private boolean UNLOCKED_FPS = true;
 	
 	private boolean running;
 	private Thread gameThread;
@@ -19,6 +29,14 @@ public class GameContainer implements Runnable {
 	
 	private Window window;
 	private Renderer renderer;
+	private Keyboard keyboard;
+	private Mouse mouse;
+	
+	private Sprite testSprite;
+	private SpriteSheet testSheet;
+	private Tiles testTiles;
+	
+	private Map testMap;
 	
 	public GameContainer(Game game) {
 		this.game = game;
@@ -27,6 +45,14 @@ public class GameContainer implements Runnable {
 	public void start() {
 		window = new Window(WIDTH, HEIGHT, SCALE, NAME);
 		renderer = new Renderer(WIDTH, HEIGHT, window.getImage());
+		keyboard = new Keyboard(window.getCanvas());
+		mouse = new Mouse(window.getCanvas());
+		
+		testSheet = new SpriteSheet("/test_images/test_tiles.png");
+		testTiles = new Tiles(testSheet, 32);
+		testSprite = new Sprite(32, 0xffe3e3e3);
+		
+		testMap = new Map(new File("res/test_maps/test_map.txt"), testTiles);
 		
 		if(!running) {
 			gameThread = new Thread(this);
@@ -89,8 +115,14 @@ public class GameContainer implements Runnable {
 	}
 	
 	public void render() {
-		game.render();
-		window.drawScreen();
 		renderer.clear();
+		game.render();
+		//renderer.drawSprite(testSprite, 0, 0);
+		//testTiles.renderTile(renderer, 0, 32, 32, 1);
+		//testTiles.renderTile(renderer, 0, 64, 32, 1);
+		//testTiles.renderTile(renderer, 0, 96, 32, 1);
+		//testTiles.renderTile(renderer, 0, 96, 96, 1);
+		testMap.render(renderer, 1);
+		window.drawScreen();
 	}
 }

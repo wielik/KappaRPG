@@ -1,0 +1,10 @@
+//Map Properties
+MapSize:3,3
+TileSize:32
+//Layer,TileID,X,Y
+0,0,0,0
+0,0,0,1
+0,0,1,1
+0,0,2,1
+0,0,2,2
+0,1,2,0
