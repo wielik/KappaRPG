@@ -42,6 +42,8 @@ public class Mob implements GameObject{
 	public int getX() {return posX;}
 	@Override
 	public int getY() {return posY;}
+	@Override
+	public Sprite getSprite() {return sprite;}
 	public int getMaxHealth() {return maxHealth;}
 	public int getHealth() {return health;}
 	public int getSpeed_X() {return speed_x;}

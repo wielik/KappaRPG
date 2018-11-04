@@ -16,8 +16,8 @@ public class Camera extends Rectangle {
 	
 	public void update() {
 		if(attached) {
-			xPos = attachedObject.getX();
-			yPos = attachedObject.getY();
+			xPos = attachedObject.getX() - width/2 + attachedObject.getSprite().getWidth();
+			yPos = attachedObject.getY() - height/2 + attachedObject.getSprite().getHeight();
 		}
 	}
 	
