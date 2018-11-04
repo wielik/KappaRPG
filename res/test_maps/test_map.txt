@@ -1,10 +1,13 @@
 //Map Properties
-MapSize:3,3
+MapSize:8,8
 TileSize:32
+FillMap:1
 //Layer,TileID,X,Y
 0,0,0,0
 0,0,0,1
 0,0,1,1
+0,0,1,0
 0,0,2,1
 0,0,2,2
-0,1,2,0
+0,0,2,0
+0,0,7,7

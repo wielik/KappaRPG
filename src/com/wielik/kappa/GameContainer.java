@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import com.wielik.kappa.entity.Mob;
+import com.wielik.kappa.entity.Player;
 import com.wielik.kappa.gfx.Image;
 import com.wielik.kappa.gfx.Renderer;
 import com.wielik.kappa.gfx.Sprite;
@@ -13,6 +14,7 @@ import com.wielik.kappa.input.Keyboard;
 import com.wielik.kappa.input.Mouse;
 import com.wielik.kappa.map.Map;
 import com.wielik.kappa.map.Tiles;
+import com.wielik.kappa.util.Camera;
 
 public class GameContainer implements Runnable {
 
@@ -27,19 +29,19 @@ public class GameContainer implements Runnable {
 	private boolean running;
 	private Thread gameThread;
 	private Game game;
+	private Camera playerCamera;
 	
 	private Window window;
 	private Renderer renderer;
 	private Keyboard keyboard;
 	private Mouse mouse;
 	
-	private Sprite testSprite;
 	private Sprite testPlayerSprite;
 	private SpriteSheet testSheet;
 	private SpriteSheet playerSheet;
 	private Tiles testTiles;
 	
-	private Mob testMob;
+	private Player testPlayer;
 	private Map testMap;
 	
 	public GameContainer(Game game) {
@@ -52,20 +54,27 @@ public class GameContainer implements Runnable {
 		keyboard = new Keyboard(window.getCanvas());
 		mouse = new Mouse(window.getCanvas());
 		
+		
 		testSheet = new SpriteSheet("/test_images/test_tiles.png");
 		playerSheet = new SpriteSheet("/test_images/test_player.png");
 		
 		testTiles = new Tiles(testSheet, 32);
-		testSprite = new Sprite(32, 0xffe3e3e3);
 		testPlayerSprite = new Sprite(playerSheet, 0, 162, 39, 46);
 		
 		testMap = new Map(new File("res/test_maps/test_map.txt"), testTiles);
-		testMob = new Mob(128, 128, testPlayerSprite);
+		testPlayer = new Player(0, 0, testPlayerSprite);
+		
+		playerCamera = new Camera(0, 0, WIDTH, HEIGHT);
+		playerCamera.attach(testPlayer);
+		renderer.setCamera(playerCamera);
+		
 		if(!running) {
 			gameThread = new Thread(this);
 			gameThread.start();
 			running = true;
 		}
+		
+		game.init();
 	}
 		
 	public void stop() {
@@ -119,18 +128,18 @@ public class GameContainer implements Runnable {
 
 	public void update() {
 		game.update();
+		if(keyboard.isKeyDown(87)) testPlayer.moveBy(0, 1); //W
+		if(keyboard.isKeyDown(83)) testPlayer.moveBy(0, -1); //S
+		if(keyboard.isKeyDown(65)) testPlayer.moveBy(-1, 0); //A
+		if(keyboard.isKeyDown(68)) testPlayer.moveBy(1, 0); //D
+		playerCamera.update();
 	}
 	
 	public void render() {
 		renderer.clear();
-		game.render();
-		//renderer.drawSprite(testSprite, 0, 0);
-		//testTiles.renderTile(renderer, 0, 32, 32, 1);
-		//testTiles.renderTile(renderer, 0, 64, 32, 1);
-		//testTiles.renderTile(renderer, 0, 96, 32, 1);
-		//testTiles.renderTile(renderer, 0, 96, 96, 1);
-		testMob.render(renderer);
 		testMap.render(renderer, 1);
+		testPlayer.render(renderer);
+		game.render();
 		window.drawScreen();
 	}
 }

@@ -34,29 +34,33 @@ public class Renderer {
 	}
 	
 	public void drawImage(Image image, int offsetX, int offsetY) {
-		renderArray(image.getPixels(), image.getWidth(), image.getHeight(), offsetX, offsetY, 1);
+		renderArray(image.getPixels(), image.getWidth(), image.getHeight(), offsetX, offsetY, camera.getZoom());
 	}
 	
 	public void drawSprite(Sprite sprite, int offsetX, int offsetY) {
-		renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), offsetX, offsetY, 1);
-	}
-	
-	public void drawLevel(Map level, int offsetX, int offsetY) {
-		
+		renderArray(sprite.getPixels(), sprite.getWidth(), sprite.getHeight(), offsetX, offsetY, camera.getZoom());
 	}
 	
 	public void setPixel(int x, int y, int value) {
-		if(x < 0 || x >= pW || y < 0 || y >= pH || value == ALPHA_COL) {
-			return;
+		if(value == ALPHA_COL)	return;
+		if(x >= camera.getX() && y >= camera.getY() && x <= camera.getX() + camera.getWidth() && y <= camera.getY() + camera.getHeight()) {
+			int pixelIndex = (x - camera.getX()) + (y - camera.getY()) * pW;
+			if(pixels.length > pixelIndex) pixels[pixelIndex] = value;
 		}
-		pixels[x + y * pW] = value;
 	}
 	
 	public void renderArray(int[] pixels, int renderWidth, int renderHeight, int offsetX, int offsetY, int zoom) {
+		
 		for(int y = 0; y < renderHeight; y++) {
 			for(int x = 0; x < renderWidth; x++) {
-				setPixel(x + offsetX, y + offsetY, pixels[x + y * renderWidth]);
+				for(int yZoomPosition = 0; yZoomPosition < zoom; yZoomPosition++) {
+					for(int xZoomPosition = 0; xZoomPosition < zoom; xZoomPosition++) {
+						setPixel((x * zoom) + offsetX + xZoomPosition, (y * zoom) + offsetY + yZoomPosition, pixels[x + y * renderWidth]);
+					}
+				}
 			}
 		}
 	}
+	
+	public Camera getCamera() {return camera;}
 }

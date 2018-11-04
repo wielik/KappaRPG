@@ -6,4 +6,7 @@ public interface GameObject {
 
 	public void update();
 	public void render(Renderer r);
+	
+	public int getX();
+	public int getY();
 }

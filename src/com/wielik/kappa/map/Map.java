@@ -13,7 +13,7 @@ public class Map {
 	private int tileSize;
 	private Tiles tileSet;
 	private int[] tiles;
-	
+		
 	public Map(File mapFile, Tiles tileSet) {
 		this.tileSet = tileSet;
 		loadFromFile(mapFile);
@@ -44,6 +44,11 @@ public class Map {
 						tileSize = Integer.parseInt(splitString[1]);
 						continue;
 					}
+					if(splitString[0].equalsIgnoreCase("FillMap")) {
+						int fillTileID = Integer.parseInt(splitString[1]);
+						fillMap(fillTileID);
+						continue;
+					}
 				}
 				String[] splitString = line.split(",");
 				if(splitString.length > 4) {
@@ -57,6 +62,10 @@ public class Map {
 				tiles[posX + posY * tileWidth] = tileID;
 			}
 		}
+	}
+	
+	private void fillMap(int ID) {
+		for(int i = 0; i < tiles.length; i++) tiles[i] = ID;
 	}
 	
 	public void render(Renderer r, int zoom) {

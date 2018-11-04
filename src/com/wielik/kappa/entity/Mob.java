@@ -31,7 +31,16 @@ public class Mob implements GameObject{
 		r.drawSprite(sprite, posX, posY);
 	}
 	
+	public void moveBy(int x, int y) {
+		this.posX += x;
+		this.posY += y;
+	}
+	public void setX(int x) {this.posX = x;}
+	public void setY(int y) {this.posY = y;}
+	
+	@Override
 	public int getX() {return posX;}
+	@Override
 	public int getY() {return posY;}
 	public int getMaxHealth() {return maxHealth;}
 	public int getHealth() {return health;}
