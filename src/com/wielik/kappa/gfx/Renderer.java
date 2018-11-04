@@ -55,7 +55,7 @@ public class Renderer {
 	public void renderArray(int[] pixels, int renderWidth, int renderHeight, int offsetX, int offsetY, int zoom) {
 		for(int y = 0; y < renderHeight; y++) {
 			for(int x = 0; x < renderWidth; x++) {
-				setPixel(x + offsetX, y + offsetY, pixels[x + y * renderHeight]);
+				setPixel(x + offsetX, y + offsetY, pixels[x + y * renderWidth]);
 			}
 		}
 	}

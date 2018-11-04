@@ -3,6 +3,7 @@ package com.wielik.kappa;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import com.wielik.kappa.entity.Mob;
 import com.wielik.kappa.gfx.Image;
 import com.wielik.kappa.gfx.Renderer;
 import com.wielik.kappa.gfx.Sprite;
@@ -33,9 +34,12 @@ public class GameContainer implements Runnable {
 	private Mouse mouse;
 	
 	private Sprite testSprite;
+	private Sprite testPlayerSprite;
 	private SpriteSheet testSheet;
+	private SpriteSheet playerSheet;
 	private Tiles testTiles;
 	
+	private Mob testMob;
 	private Map testMap;
 	
 	public GameContainer(Game game) {
@@ -49,11 +53,14 @@ public class GameContainer implements Runnable {
 		mouse = new Mouse(window.getCanvas());
 		
 		testSheet = new SpriteSheet("/test_images/test_tiles.png");
+		playerSheet = new SpriteSheet("/test_images/test_player.png");
+		
 		testTiles = new Tiles(testSheet, 32);
 		testSprite = new Sprite(32, 0xffe3e3e3);
+		testPlayerSprite = new Sprite(playerSheet, 0, 162, 39, 46);
 		
 		testMap = new Map(new File("res/test_maps/test_map.txt"), testTiles);
-		
+		testMob = new Mob(128, 128, testPlayerSprite);
 		if(!running) {
 			gameThread = new Thread(this);
 			gameThread.start();
@@ -122,6 +129,7 @@ public class GameContainer implements Runnable {
 		//testTiles.renderTile(renderer, 0, 64, 32, 1);
 		//testTiles.renderTile(renderer, 0, 96, 32, 1);
 		//testTiles.renderTile(renderer, 0, 96, 96, 1);
+		testMob.render(renderer);
 		testMap.render(renderer, 1);
 		window.drawScreen();
 	}
