@@ -1,7 +1,7 @@
 //Map Properties
-MapSize:8,8
+MapSize:800,800
 TileSize:32
-FillMap:1
+FillMap:0
 //Layer,TileID,X,Y
 0,0,0,0
 0,0,0,1

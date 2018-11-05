@@ -22,7 +22,6 @@ public class Renderer {
 		this.pW = width;
 		this.pH = height;
 		this.pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		
 	}
 	
 	public void setCamera(Camera camera) {
@@ -63,4 +62,6 @@ public class Renderer {
 	}
 	
 	public Camera getCamera() {return camera;}
+	public int getPixelWidth() {return pW;}
+	public int getPixelHeight() {return pH;}
 }

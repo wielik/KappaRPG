@@ -9,16 +9,28 @@ public class Mob implements GameObject{
 	protected int health;
 	protected int posX;
 	protected int posY;
-	protected int speed_x;
-	protected int speed_y;
+	protected int speed;
 	protected Sprite sprite;
+	
+	protected int updateCounter = 0;
 	
 	protected boolean moving;
 	
-	public Mob(int posX, int posY, Sprite sprite) {
+	public Mob(Sprite sprite) {
+		this(sprite, 0 , 0);
+	}
+	
+	public Mob(Sprite sprite, int posX, int posY) {
+		this(sprite, posX, posY, 2, 100);
+	}
+	
+	public Mob(Sprite sprite, int posX, int posY, int speed, int maxHealth) {
+		this.sprite = sprite;
 		this.posX = posX;
 		this.posY = posY;
-		this.sprite = sprite;
+		this.speed= speed;
+		this.maxHealth = maxHealth;
+		this.health = maxHealth;
 	}
 	
 	@Override
@@ -46,6 +58,5 @@ public class Mob implements GameObject{
 	public Sprite getSprite() {return sprite;}
 	public int getMaxHealth() {return maxHealth;}
 	public int getHealth() {return health;}
-	public int getSpeed_X() {return speed_x;}
-	public int getSpeed_Y() {return speed_y;}
+	public int getSpeed() {return speed;}
 }

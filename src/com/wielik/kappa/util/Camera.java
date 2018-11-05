@@ -1,6 +1,7 @@
 package com.wielik.kappa.util;
 
 import com.wielik.kappa.entity.GameObject;
+import com.wielik.kappa.gfx.Sprite;
 
 public class Camera extends Rectangle {
 
@@ -16,8 +17,15 @@ public class Camera extends Rectangle {
 	
 	public void update() {
 		if(attached) {
-			xPos = attachedObject.getX() - width/2 + attachedObject.getSprite().getWidth();
-			yPos = attachedObject.getY() - height/2 + attachedObject.getSprite().getHeight();
+			Sprite attachedSprite = attachedObject.getSprite();
+			int spriteOffset_X = 0;
+			int spriteOffset_Y = 0;
+			if(attachedSprite != null) {
+				spriteOffset_X = attachedSprite.getWidth();
+				spriteOffset_Y = attachedSprite.getHeight();
+			}
+			xPos = attachedObject.getX() - width/2 + spriteOffset_X;
+			yPos = attachedObject.getY() - height/2 + spriteOffset_Y;
 		}
 	}
 	

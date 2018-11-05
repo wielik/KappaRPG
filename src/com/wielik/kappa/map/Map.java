@@ -68,17 +68,48 @@ public class Map {
 		for(int i = 0; i < tiles.length; i++) tiles[i] = ID;
 	}
 	
-	public void render(Renderer r, int zoom) {
+	public void render(Renderer r) {
 		//TODO: jezeli mapa jest duza to renderowaæ tylko to co widzimy bo fpsy spadaja mocno
+		int zoom = r.getCamera().getZoom();
+		int renders = 0;
+		int xPosition = r.getCamera().getX();
+		int yPosition = r.getCamera().getY();
+		int screenSizeX = r.getPixelWidth();
+		int screenSizeY = r.getPixelHeight();
+		
+		if(xPosition < 0) xPosition = 0;
+		if(yPosition < 0) yPosition = 0;
+		
+		int x0 = xPosition / tileSize;
+		int y0 = yPosition / tileSize;
+		
+		int x1 = (xPosition + screenSizeX) / tileSize;
+		int y1 = (yPosition + screenSizeY) / tileSize;
+		
 		int xIncrement = tileSize * zoom;
 		int yIncrement = tileSize * zoom;
 		
-		for(int x = 0; x < tileWidth; x++) {
-			for(int y = 0; y < tileHeight; y++) {
+
+		for(int x = x0; x < x1; x++) {
+			for(int y = y0; y < y1; y++) {
 				tileSet.renderTile(r, tiles[x + y * tileWidth], x * xIncrement, y * yIncrement, zoom);
 			}
 		}
+		/*
+		for(int x = 0; x < tileWidth; x++) {
+			for(int y = 0; y < tileHeight; y++) {
+				pixX = x * xIncrement;
+				pixY = y * yIncrement;
+				if(pixX > (xPosition + screenSizeX) || pixY > (yPosition + screenSizeY) || pixX < xPosition || pixY < yPosition) continue;
+				tileSet.renderTile(r, tiles[x + y * tileWidth], pixX, pixY, zoom);
+			}
+		}
+		*/
 	}
 	
+	public Tile getTile(int x, int y) {
+		int id = tiles[x + y * tileWidth];
+		return tileSet.getTileSet().get(id);
+	}
 	public Tiles getTileSet() {return tileSet;}
 }

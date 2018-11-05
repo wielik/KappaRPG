@@ -2,7 +2,9 @@ package com.wielik.kappa;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
+import com.wielik.kappa.entity.GameObject;
 import com.wielik.kappa.entity.Mob;
 import com.wielik.kappa.entity.Player;
 import com.wielik.kappa.gfx.Image;
@@ -10,6 +12,7 @@ import com.wielik.kappa.gfx.Renderer;
 import com.wielik.kappa.gfx.Sprite;
 import com.wielik.kappa.gfx.SpriteSheet;
 import com.wielik.kappa.gfx.Window;
+import com.wielik.kappa.input.Input;
 import com.wielik.kappa.input.Keyboard;
 import com.wielik.kappa.input.Mouse;
 import com.wielik.kappa.map.Map;
@@ -33,8 +36,7 @@ public class GameContainer implements Runnable {
 	
 	private Window window;
 	private Renderer renderer;
-	private Keyboard keyboard;
-	private Mouse mouse;
+	private Input inputHandler;
 	
 	private Sprite testPlayerSprite;
 	private SpriteSheet testSheet;
@@ -44,6 +46,8 @@ public class GameContainer implements Runnable {
 	private Player testPlayer;
 	private Map testMap;
 	
+	private ArrayList<GameObject> gameObjects;
+	
 	public GameContainer(Game game) {
 		this.game = game;
 	}
@@ -51,9 +55,9 @@ public class GameContainer implements Runnable {
 	public void start() {
 		window = new Window(WIDTH, HEIGHT, SCALE, NAME);
 		renderer = new Renderer(WIDTH, HEIGHT, window.getImage());
-		keyboard = new Keyboard(window.getCanvas());
-		mouse = new Mouse(window.getCanvas());
+		inputHandler= new Input(window.getCanvas());
 		
+		gameObjects = new ArrayList<GameObject>();
 		
 		testSheet = new SpriteSheet("/test_images/test_tiles.png");
 		playerSheet = new SpriteSheet("/test_images/test_player.png");
@@ -62,11 +66,12 @@ public class GameContainer implements Runnable {
 		testPlayerSprite = new Sprite(playerSheet, 0, 162, 39, 46);
 		
 		testMap = new Map(new File("res/test_maps/test_map.txt"), testTiles);
-		testPlayer = new Player(0, 0, testPlayerSprite);
+		testPlayer = new Player(inputHandler, testPlayerSprite, 0, 0);
 		
 		playerCamera = new Camera(0, 0, WIDTH, HEIGHT);
 		playerCamera.attach(testPlayer);
 		renderer.setCamera(playerCamera);
+		gameObjects.add(testPlayer);
 		
 		if(!running) {
 			gameThread = new Thread(this);
@@ -128,17 +133,18 @@ public class GameContainer implements Runnable {
 
 	public void update() {
 		game.update();
-		if(keyboard.isKeyDown(87)) testPlayer.moveBy(0, 1); //W
-		if(keyboard.isKeyDown(83)) testPlayer.moveBy(0, -1); //S
-		if(keyboard.isKeyDown(65)) testPlayer.moveBy(-1, 0); //A
-		if(keyboard.isKeyDown(68)) testPlayer.moveBy(1, 0); //D
+		for(int i = 0; i < gameObjects.size(); i++) {
+			gameObjects.get(i).update();
+		}
 		playerCamera.update();
 	}
 	
 	public void render() {
 		renderer.clear();
-		testMap.render(renderer, 1);
-		testPlayer.render(renderer);
+		testMap.render(renderer);
+		for(int i = 0; i < gameObjects.size(); i++) {
+			gameObjects.get(i).render(renderer);
+		}
 		game.render();
 		window.drawScreen();
 	}
